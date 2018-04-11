@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -13,13 +14,8 @@ import (
 
 var hmacSampleSecret []byte
 
-type AuthData struct {
-	AccessToken string `json:"accessToken"`
-	IDToken     string `json:"id_token"`
-}
-
-type UserInfo struct {
-	Login string `json="login"`
+type Token struct {
+	Token string `json:"token"`
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -53,12 +49,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte(tokenString))
+	tokenResult := Token{Token: tokenString}
+
+	b, err := json.Marshal(tokenResult)
+	if err != nil {
+		log.WithError(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Write(b)
 }
 
 func main() {
 
 	port := ":" + envy.Get("PORT", "3000")
+	stage := envy.Get("ENV", "dev")
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -68,6 +73,6 @@ func main() {
 
 	r.Get("/login", LoginHandler)
 
-	log.Infof("======== App running in %v mode ========", "stage")
+	log.Infof("======== App running in %v mode on port %v ========", stage, port)
 	http.ListenAndServe(port, r)
 }

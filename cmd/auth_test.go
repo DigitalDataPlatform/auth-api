@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -60,9 +61,16 @@ func Test_GetLogin_ReturnValidToken(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	token := rr.Body.String()
+	body := rr.Body.String()
 
-	tk, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+	var tokenResult ddpAuth.Token
+
+	err = json.Unmarshal([]byte(body), &tokenResult)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tk, err := jwt.Parse(tokenResult.Token, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
