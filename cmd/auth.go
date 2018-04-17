@@ -71,7 +71,7 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/login", LoginHandler)
+	r.Get("/auth/login", LoginHandler)
 
 	log.Infof("======== App running in %v mode on port %v ========", stage, port)
 	http.ListenAndServe(port, r)
