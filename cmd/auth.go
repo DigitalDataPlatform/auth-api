@@ -62,7 +62,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	port := ":" + envy.Get("PORT", "3000")
+	port := ":" + envy.Get("PORT", "3001")
 	stage := envy.Get("ENV", "dev")
 
 	r := chi.NewRouter()
