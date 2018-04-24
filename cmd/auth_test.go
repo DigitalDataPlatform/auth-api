@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	ddpAuth "github.com/adeo/ddp-svc-auth/cmd"
 	jwt "github.com/dgrijalva/jwt-go"
-	ddpAuth "gitlab.adeo.com/ddp-auth/cmd"
 )
 
 func Test_GetLogin_EmptyUsername(t *testing.T) {
