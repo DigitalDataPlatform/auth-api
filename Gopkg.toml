@@ -24,6 +24,7 @@
 #   go-tests = true
 #   unused-packages = true
 
+ignored = ["github.com/adeo/ddp-svc-auth"]
 
 [[constraint]]
   name = "github.com/apex/log"
